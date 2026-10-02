@@ -1,0 +1,41 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # При каждом запуске: применить миграции, собрать статику, запустить gunicorn
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput &&
+             gunicorn mysite.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - db_data:/app/database
+      - static_data:/app/static
+      - media_data:/app/uploads
+    expose:
+      - "8000"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: always
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - static_data:/app/static:ro
+      - media_data:/app/uploads:ro
+
+volumes:
+  db_data:
+  static_data:
+  media_data:

@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+.env
+mysite/database/
+mysite/static/
+*.sqlite3
+.vscode/
+.idea/

@@ -1,0 +1,13 @@
+.git
+.gitignore
+.env
+venv
+.venv
+**/__pycache__
+**/*.pyc
+mysite/database
+mysite/static
+*.sqlite3
+.vscode
+.idea
+README.md
